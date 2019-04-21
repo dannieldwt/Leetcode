@@ -8,8 +8,6 @@ int majorityElement(vector<int> &nums);
 int main()
 {
 	vector<int> nums = {1, 2, 3, 4, 5, 1, 1, 1, 1};
-	for (auto it = nums.begin(); it != nums.end(); ++it)
-		cout << *it << endl;
 	int number = majorityElement(nums);
 	cout << number;
 	
@@ -18,6 +16,7 @@ int main()
 	
 int majorityElement(vector<int> &nums)
 {
+	/*
 	map<int, int> count;
 	for (int i = 0; i < nums.size(); ++i)
 	{
@@ -25,4 +24,25 @@ int majorityElement(vector<int> &nums)
 		if (count[nums[i]] > (nums.size() / 2))
 			return nums[i];
 	}
+	*/
+	
+	int m = nums[0];
+	int c = 0;
+	for (auto num: nums)
+	{
+		if (c == 0)
+		{
+			m = num;
+			++c;
+		}
+		else if (m == num)
+		{
+			++c;
+		}
+		else
+		{
+			--c;
+		}
+	}
+	return m;
 }
