@@ -1,0 +1,60 @@
+# SOLUTION
+
+**方法一 -- 正负替换**
+
+本题关键是要找到一个标记方法，不使用额外的空间但又能成功的记录所有见过的数，从而将见过的和没见过的分开
+于是也就有了接下来几个方法。
+
+首先，正负替换，由于数值范围是1-n与索引对应且正好都是正数，那么我们不妨用负数来起标记作用，通过遍历每一个数字
+然后到其对应的索引位置上，将该值设为负数，表示已经见过它了。这里注意表示见过的是该位置对应的数字，而实际上
+本来的数字在后续遍历中仍然会有用，但缺可能先被设置成负数，注意取绝对值。通过正负替换，起到消除作用。
+
+```C++
+class Solution {
+vector<int> findDisappearedNumbers(vector<int> &nums)
+{
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		int idx = abs(nums[i]) - 1;
+		nums[i] = nums[idx] > 0 ? -nums[idx] : nums[idx];
+	}
+	vector<int> res;
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		if (nums[i] > 0)
+			res.push_back(i + 1);
+	}
+	return res;
+}
+}
+```
+
+**方法二 -- 自组织排序（桶排序）**
+
+同样也是找到标记方法，这里标记方法是用位置和位置上值的关系来标记，由于数值1-n，使其和相同多的0-n-1
+起到一一对应的作用，从而根据这个关系进行区分。
+
+起标记的方法还有累加n，通过给对应位置的元素上累加n，没出现过的必然没被增加，那么最后值必然小于n。
+
+```C++
+class Solution {
+vector<int> findDisappearedNumbers(vector<int> &nums)
+{
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		if (nums[i] != nums[nums[i] - 1])
+		{
+			swap(nums[i], nums[nums[i] - 1]);
+			i--;
+		}
+	}
+	vector<int> res;
+	for (int i = 0; i < nums.size(); ++i)
+	{
+		if (nums[i] != nums[nums[i] - 1])
+			res.push_back(i + 1);
+	}
+	return res;
+}
+}
+```
